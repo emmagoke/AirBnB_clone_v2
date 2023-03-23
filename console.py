@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex  # For spliting shell like commands
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -10,6 +11,17 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+
+
+def isNumber(arg):
+    """
+    This function checks id arg is a number
+    """
+    try:
+        float(arg)
+        return True
+    except ValueError:
+        return False
 
 
 class HBNBCommand(cmd.Cmd):
@@ -29,6 +41,7 @@ class HBNBCommand(cmd.Cmd):
              'max_guest': int, 'price_by_night': int,
              'latitude': float, 'longitude': float
             }
+
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -73,7 +86,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}' \
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,13 +131,36 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
+        try:
+            class_name = shlex.split(args)[0]
+            if class_name not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                new_instance = HBNBCommand.classes[class_name]()
+                try:
+                    # The try checks if no param is passed
+                    remain = shlex.split(args)[1:]
+                    for val in remain:
+                        try:
+                            key = val.split('=')[0]
+                            value = val.split('=')[1]
+                            if hasattr(new_instance, key):
+                                if key in HBNBCommand.types:
+                                    value = HBNBCommand.types[key](value)
+                                else:
+                                    value = value.replace('_', ' ')
+                                setattr(new_instance, key, value)
+                        except (IndexError, ValueError) as E:
+                            pass
+                    print('level 1')
+                except IndexError as c:
+                    print(c)
+                    pass
+                new_instance.save()
+                print(new_instance.id)
+        except:
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -319,6 +355,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
