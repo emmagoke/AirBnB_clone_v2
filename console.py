@@ -153,7 +153,6 @@ class HBNBCommand(cmd.Cmd):
                                 setattr(new_instance, key, value)
                         except (IndexError, ValueError) as E:
                             pass
-                    print('level 1')
                 except IndexError as c:
                     print(c)
                     pass
