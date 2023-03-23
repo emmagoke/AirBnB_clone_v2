@@ -37,7 +37,8 @@ class FileStorage:
         """delete obj from __objects if it’s inside"""
         if obj is not None:
             search = obj.to_dict()['__class__'] + '.' + obj.id
-            FileStorage.__objects.pop(search)
+            if search in FileStorage.__objects:
+                FileStorage.__objects.pop(search)
 
     def reload(self):
         """Loads storage dictionary from file"""
