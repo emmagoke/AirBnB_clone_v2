@@ -237,7 +237,7 @@ class HBNBCommand(cmd.Cmd):
         print_list = []
         dict_all = storage.all()
 
-        print(dict_all)
+        
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
