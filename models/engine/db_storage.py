@@ -9,12 +9,12 @@ from models.city import City
 
 
 class DBStorage:
-    """ """
+    """ This Class handles storage into the MySQL Database. """
     __engine = None
     __session = None
 
     def __init__(self):
-        """ """
+        """ This method is created for every instance of DbStorage. """
         user = os.environ.get('HBNB_MYSQL_USER')
         password = os.environ.get('HBNB_MYSQL_PWD')
         host = os.environ.get('HBNB_MYSQL_HOST', 'localhost')
@@ -30,7 +30,10 @@ class DBStorage:
         Base.metadata.drop_all(DBStorage.__engine)
 
     def all(self, cls=None):
-        """ """
+        """
+        This method returns all the rows in the database or
+        row based on the Class (cls the argument).
+        """
         output = {}
         if cls is not None:
             query = DBStorage.__session.query(cls).all()
@@ -48,20 +51,20 @@ class DBStorage:
         return output
 
     def new(self, obj):
-        """ """
+        """ This method adds a new instance into the current session. """
         DBStorage.__session.add(obj)
 
     def save(self):
-        """ """
+        """ Saves every unsaved object or changes in the session to the db. """
         DBStorage.__session.commit()
 
     def delete(self, obj=None):
-        """ """
+        """ Deletes an object from the current session. """
         if obj is not None:
             DBStorage.__session.delete(obj)
 
     def reload(self):
-        """ """
+        """ Creates the session to work with the database. """
         Base.metadata.create_all(DBStorage.__engine)
         session_factory = sessionmaker(bind=DBStorage.__engine,
                                        expire_on_commit=False)
