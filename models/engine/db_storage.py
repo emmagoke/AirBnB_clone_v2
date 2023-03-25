@@ -34,11 +34,16 @@ class DBStorage:
         output = {}
         if cls is not None:
             query = DBStorage.__session.query(cls).all()
+            for row in query:
+                key = row.__name__ + '.' + row.id
+                output[key] = row
         else:
-            query = DBStorage.__session.query().all()
-        for row in query:
-            key = row.__name__ + '.' + row.id
-            output[key] = row
+            classes = [State, City]
+            for class_ in classes:
+                query = DBStorage.__session.query(class_).all()
+                for row in query:
+                    key = row.__name__ + '.' + row.id
+                    output[key] = row
 
         return output
 
