@@ -21,13 +21,13 @@ class DBStorage:
         database = os.environ.get('HBNB_MYSQL_DB')
         env = os.environ.get('HBNB_ENV')
 
-        DBStorage.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                                           .format(user, password, host,
-                                                   database),
-                                           pool_pre_ping=True)
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
+                                      user, password, host, database),
+                                      pool_pre_ping=True)
 
         # drop all tables if the environment variable HBNB_ENV is equal to test
-        Base.metadata.drop_all(DBStorage.__engine)
+        if env == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -36,37 +36,37 @@ class DBStorage:
         """
         output = {}
         if cls is not None:
-            query = DBStorage.__session.query(cls).all()
+            query = self.__session.query(cls).all()
             for row in query:
-                key = row.__name__ + '.' + row.id
+                key = type(row).__name__ + '.' + row.id
                 output[key] = row
         else:
             classes = [State, City]
             for class_ in classes:
-                query = DBStorage.__session.query(class_).all()
+                query = self.__session.query(class_).all()
                 for row in query:
-                    key = row.__name__ + '.' + row.id
+                    key = type(row).__name__ + '.' + row.id
                     output[key] = row
 
         return output
 
     def new(self, obj):
         """ This method adds a new instance into the current session. """
-        DBStorage.__session.add(obj)
+        self.__session.add(obj)
 
     def save(self):
         """ Saves every unsaved object or changes in the session to the db. """
-        DBStorage.__session.commit()
+        self.__session.commit()
 
     def delete(self, obj=None):
         """ Deletes an object from the current session. """
         if obj is not None:
-            DBStorage.__session.delete(obj)
+            self.__session.delete(obj)
 
     def reload(self):
         """ Creates the session to work with the database. """
-        Base.metadata.create_all(DBStorage.__engine)
-        session_factory = sessionmaker(bind=DBStorage.__engine,
+        Base.metadata.create_all(self.__engine)
+        session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
-        DBStorage.__session = Session()
+        self.__session = Session()

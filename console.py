@@ -251,7 +251,7 @@ class HBNBCommand(cmd.Cmd):
             #  for k, v in storage._FileStorage__objects.items():
             for k, v in dict_all.items():
                 print_list.append(str(v))
-
+        
         print(print_list)
 
     def help_all(self):
