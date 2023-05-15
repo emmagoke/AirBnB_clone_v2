@@ -7,6 +7,9 @@ from models.base_model import Base
 from models.state import State
 from models.city import City
 from models.user import User
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 
 
 class DBStorage:
@@ -71,3 +74,7 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """ call remove() method on the private session attribute """
+        self.__session.remove()
