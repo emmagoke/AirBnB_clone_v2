@@ -7,6 +7,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
+
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)
@@ -27,4 +28,4 @@ class Place(BaseModel, Base):
     #  price_by_night = 0
     #  latitude = 0.0
     #  longitude = 0.0
-    amenity_ids = []
+    #  amenity_ids = []
