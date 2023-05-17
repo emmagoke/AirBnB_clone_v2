@@ -24,6 +24,15 @@ def isNumber(arg):
         return False
 
 
+def isInt(arg):
+    """ This function checks if a number is an Int. """
+    try:
+        int(arg)
+        return True
+    except ValueError:
+        return False
+
+
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
@@ -41,7 +50,6 @@ class HBNBCommand(cmd.Cmd):
              'max_guest': int, 'price_by_night': int,
              'latitude': float, 'longitude': float
             }
-
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -128,38 +136,76 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
-            print("** class name missing **")
-            return
         try:
-            class_name = shlex.split(args)[0]
-            if class_name not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
+            if not args:
+                raise SyntaxError
+
+            #  Spliting the arguments into list
+            line = rags.split(" ")
+
+            #  if line is not empty extract class name
+            if line:
+                #  class name
+                cls = line[0]
             else:
-                new_instance = HBNBCommand.classes[class_name]()
-                try:
-                    # The try checks if no param is passed
-                    remain = shlex.split(args)[1:]
-                    for val in remain:
-                        try:
-                            key = val.split('=')[0]
-                            value = val.split('=')[1]
-                            if hasattr(new_instance, key):
-                                if key in HBNBCommand.types:
-                                    value = HBNBCommand.types[key](value)
-                                else:
-                                    value = value.replace('_', ' ')
-                                setattr(new_instance, key, value)
-                        except (IndexError, ValueError) as E:
-                            pass
-                except IndexError as c:
-                    print(c)
-                    pass
-                new_instance.save()
-                print(new_instance.id)
-        except:
-            return
+                #  the class name is misssing
+                raise SyntaxError
+
+            input_dict = {}
+
+            for item in line[1:]:
+                key, value = item.split('=')
+                if isInt(value):
+                    input_dict[key] = int(value)
+                elif isNumber(value):
+                    input_dict[key] = float(value)
+                else:
+                    #  a string, remove (", ') at the end of the string
+                    value = value.replace('_', ' ').strip('"\'')
+                    input_dict[key] = value
+
+            obj = self.classes[cls](**input_dict)
+            storage.new(obj)
+            obj.save()
+            print(obj.id)
+
+        except SyntaxError:
+            print("** class name missing **")
+        except KeyError:
+            print("** class doesn't exist **")
+
+        #  if not args:
+        #      print("** class name missing **")
+        #      return
+        #  try:
+        #    class_name = shlex.split(args)[0]
+        #    if class_name not in HBNBCommand.classes:
+        #        print("** class doesn't exist **")
+        #        return
+        #    else:
+        #        new_instance = HBNBCommand.classes[class_name]()
+        #        try:
+        #            # The try checks if no param is passed
+        #            remain = shlex.split(args)[1:]
+        #            for val in remain:
+        #                try:
+        #                    key = val.split('=')[0]
+        #                    value = val.split('=')[1]
+        #                    if hasattr(new_instance, key):
+        #                        if key in HBNBCommand.types:
+        #                            value = HBNBCommand.types[key](value)
+        #                        else:
+        #                            value = value.replace('_', ' ')
+        #                        setattr(new_instance, key, value)
+        #                except (IndexError, ValueError) as E:
+        #                    pass
+        #        except IndexError as c:
+        #            print(c)
+        #            pass
+        #        new_instance.save()
+        #        print(new_instance.id)
+        #  except:
+        #    return
 
     def help_create(self):
         """ Help information for the create method """
@@ -237,7 +283,6 @@ class HBNBCommand(cmd.Cmd):
         print_list = []
         dict_all = storage.all()
 
-        
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
@@ -251,7 +296,7 @@ class HBNBCommand(cmd.Cmd):
             #  for k, v in storage._FileStorage__objects.items():
             for k, v in dict_all.items():
                 print_list.append(str(v))
-        
+
         print(print_list)
 
     def help_all(self):
