@@ -141,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError
 
             #  Spliting the arguments into list
-            line = rags.split(" ")
+            line = args.split(" ")
 
             #  if line is not empty extract class name
             if line:
@@ -165,7 +165,7 @@ class HBNBCommand(cmd.Cmd):
                     input_dict[key] = value
 
             obj = self.classes[cls](**input_dict)
-            storage.new(obj)
+            #  storage.new(obj)
             obj.save()
             print(obj.id)
 
@@ -285,7 +285,7 @@ class HBNBCommand(cmd.Cmd):
 
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
+            if args not in self.classes:
                 print("** class doesn't exist **")
                 return
             #  for k, v in storage._FileStorage__objects.items():
@@ -294,8 +294,8 @@ class HBNBCommand(cmd.Cmd):
                     print_list.append(str(v))
         else:
             #  for k, v in storage._FileStorage__objects.items():
-            for k, v in dict_all.items():
-                print_list.append(str(v))
+            for k, value in dict_all.items():
+                print_list.append(str(value))
 
         print(print_list)
 
