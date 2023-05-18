@@ -3,6 +3,8 @@
 This python script contains TestCase for console.py
 """
 import unittest
+from unittest.mock import patch
+from io import StringIO
 from console import HBNBCommand
 import pep8
 import console
@@ -10,6 +12,16 @@ import console
 
 class TestConsole(unittest.TestCase):
     """ This class tests console.py """
+    
+    @classmethod
+    def setUpClass(cls):
+        """ setup the console for test. """
+        cls.cons = HBNBCommand()
+
+    @classmethod
+    def teardown(cls):
+        """ At the end of the test will delete the console. """
+        del cls.cons
 
     def test_pep8(self):
         """ Test if console follows pep8 rules. """
@@ -28,3 +40,15 @@ class TestConsole(unittest.TestCase):
         self.assertIsNotNone(HBNBCommand.do_destroy.__doc__)
         self.assertIsNotNone(HBNBCommand.do_update.__doc__)
         self.assertIsNotNone(HBNBCommand.do_count.__doc__)
+
+    def test_emptyline(self):
+        """ Checks for empty input on the console. """
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cons.onecmd("\n")
+            self.assertEqual('', f.getvalue())
+
+    def test_quit(self):
+        """ Test the quit input command on the console. """
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.cons.onecmd("quit")
+            self.assertEqual(None, f.getvalue())
