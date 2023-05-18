@@ -39,7 +39,7 @@ class DBStorage:
         row based on the Class (cls the argument).
         """
         output = {}
-        if cls is not None:
+        if cls:  # if class is not None
             query = self.__session.query(cls).all()
             for row in query:
                 key = type(row).__name__ + '.' + row.id
