@@ -17,10 +17,12 @@ class State(BaseModel, Base):
         super().__init__(*args, **kwargs)
 
     if models.db_type != 'db':
+        from models.city import City
         @property
         def cities(self):
+            """ A getter method for all City related to the current State """
             state_city = []
-            all_cities = models.storage.all("City")
+            all_cities = models.storage.all(City)
 
             for city in all_cities:
                 if self.id == city.state_id:
