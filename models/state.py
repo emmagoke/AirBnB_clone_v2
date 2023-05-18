@@ -18,6 +18,7 @@ class State(BaseModel, Base):
 
     if models.db_type != 'db':
         from models.city import City
+
         @property
         def cities(self):
             """ A getter method for all City related to the current State """
