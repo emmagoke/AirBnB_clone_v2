@@ -20,6 +20,6 @@ ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -hR ubuntu:ubuntu /data/
 
 hbnb_url="\tlocation /hbnb_static/ {\t\t\nalias /data/web_static/current/;\t\t\nautoindex off;\t}"
-sudo sed -i "29i\ $hbnb_url" /etc/nginx/sites-avaliable/default
+sudo sed -i "29i\ $hbnb_url" /etc/nginx/sites-available/default
 
 service nginx restart
