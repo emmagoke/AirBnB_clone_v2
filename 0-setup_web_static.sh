@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # This bash script sets up your web servers for the deployment of web_static.
 
+sudo apt update -y
 sudo apt -y install nginx
 
 mkdir -p /data/
@@ -22,4 +23,15 @@ echo "$html_" >> /data/web_static/releases/test/index.html
 
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-chown ubuntu:ubuntu 
+# Give ownership of the /data/ folder to the ubuntu user AND group
+sudo chown -R ubuntu:ubuntu /data/
+
+hbnb_url="
+location /hbnb_static/ {
+	alias /data/web_static/current/;
+	autoindex off;
+}
+"
+sudo sed -i "29i\ $hbnb_url" /etc/nginx/sites-avaliable/default
+
+service nginx restart
