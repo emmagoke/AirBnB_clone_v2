@@ -9,7 +9,7 @@ from fabric.api import local
 
 
 def do_pack():
-    """ """
+    """ This function creates an archive based on the tar command. """
 
     try:
         if not os.path.isdir('versions'):
