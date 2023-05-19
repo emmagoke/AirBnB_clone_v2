@@ -16,7 +16,7 @@ def do_pack():
             local('mkdir -p versions')
 
         today_date = datetime.now().strftime("%Y%m%d%H%M%S")
-        output_file = f"versions/web_static_{today_date}.tgz"
+        output_file = "versions/web_static_{}.tgz".format(today_date)
 
         local("tar -cvzf {} web_static".format(output_file))
         return output_file
