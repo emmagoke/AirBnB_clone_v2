@@ -60,7 +60,7 @@ def deploy():
     archive_pack = do_pack()
 
     if archive_pack:
-        result = do_doploy(archive_pack)
+        result = do_deploy(archive_pack)
         return result
     else:
         return False
