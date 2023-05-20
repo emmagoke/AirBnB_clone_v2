@@ -6,6 +6,7 @@ import os
 from fabric.api import put, run, env
 
 env.hosts = ['35.175.135.243', '54.157.136.243']
+env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
@@ -21,7 +22,8 @@ def do_deploy(archive_path):
 
         put(archive_path, '/tmp/')
         run("mkdir -p {0}/{1}/".format(data_path, ex_name))
-        run("tar -xzf /tmp/{1} -C {0}/{1}/".format(data_path, archive_name))
+        run("tar -xzf /tmp/{} -C {}/{}/".format(archive_name,
+            data_path, ex_name))
         run("rm /tmp/{}".format(archive_name))
         run("mv {0}/{1}/web_static/* {0}/{1}/".format(data_path, ex_name))
         run("rm -rf {}/{}/web_static".format(data_path, ex_name))
@@ -30,5 +32,6 @@ def do_deploy(archive_path):
             ex_name))
 
         return True
-    except Exception:
+    except Exception as e:
+        print(e)
         return False
