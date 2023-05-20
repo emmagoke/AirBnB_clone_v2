@@ -1,6 +1,12 @@
 #!/usr/bin/python3
 """
 This script distributes archives to your web servers
+run this if env.user is not set:
+     fab -f 2-do_deploy_web_static.py
+     do_deploy:archive_path=versions/web_static_20170315003959.tgz
+     -i my_ssh_private_key -u ubuntu
+
+But for this script (-u) will not be included.
 """
 import os
 from fabric.api import put, run, env
