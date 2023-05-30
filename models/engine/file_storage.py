@@ -12,9 +12,9 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
         if cls:
             output = {}
-            for key in self.__objects.keys():
-                if key.split('.')[0] == cls.__name__:
-                    output[key] = self.__objects[key]
+            for key, value in self.__objects.items():
+                if cls == value.__class__ or cls == value.__class__.__name__:
+                    output[key] = value
             return output
 
         return self.__objects
