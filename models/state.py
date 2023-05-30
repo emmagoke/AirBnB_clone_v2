@@ -30,7 +30,6 @@ class State(BaseModel, Base):
             from models.city import City
 
             state_city = []
-            print(City)
             all_cities = models.storage.all(City)
 
             for city in all_cities.values():
