@@ -13,7 +13,7 @@ class FileStorage:
         if cls:
             output = {}
             for key in self.__objects.keys():
-                if key.split('.')[0] == type(cls).__name__:
+                if key.split('.')[0] == cls.__name__:
                     output[key] = self.__objects[key]
             return output
 
