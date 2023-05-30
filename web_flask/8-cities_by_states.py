@@ -23,7 +23,7 @@ def cities_state():
     """ Returns all state object sorted by name. """
 
     all_state = storage.all(State).values()
-    sorted_state = sorted(all_state, key= lambda key: key.name)
+    sorted_state = sorted(all_state, key=lambda key: key.name)
     return render_template('8-cities_by_states.html', states=sorted_state)
 
 
