@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """This script handle data storage from and to MySQL Database."""
 import os
 from sqlalchemy import create_engine
