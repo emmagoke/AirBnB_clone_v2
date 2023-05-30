@@ -25,7 +25,7 @@ def states_list():
 
     state_list = storage.all(State).values()
     state_sorted = sorted(state_list, key=lambda k: k.name)
-    return render_template('7-states_list.html', states=state_list)
+    return render_template('7-states_list.html', states=state_sorted)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', '5000'))
