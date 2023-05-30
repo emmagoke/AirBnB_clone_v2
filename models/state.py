@@ -22,12 +22,15 @@ class State(BaseModel, Base):
         super().__init__(*args, **kwargs)
 
     if getenv('HBNB_TYPE_STORAGE') != 'db':
-        from models.city import City
+        #  from models.city import City
 
         @property
         def cities(self):
             """ A getter method for all City related to the current State """
+            from models.city import City
+
             state_city = []
+            print(City)
             all_cities = models.storage.all(City)
 
             for city in all_cities.values():
